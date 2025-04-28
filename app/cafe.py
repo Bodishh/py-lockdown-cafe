@@ -16,6 +16,18 @@ class Cafe:
         if expiration_date is None:
             raise OutdatedVaccineError("Vaccine expiration date is missing.")
 
+        if isinstance(expiration_date, str):
+            try:
+                expiration_date = datetime.datetime.strptime(
+                    expiration_date, "%Y-%m-%d").date()
+            except ValueError:
+                raise OutdatedVaccineError(
+                    "Invalid date format for vaccine expiration date.")
+
+        if not isinstance(expiration_date, datetime.date):
+            raise OutdatedVaccineError(
+                "Expiration date must be a datetime.date object.")
+
         if expiration_date < datetime.date.today():
             raise OutdatedVaccineError("Vaccine is outdated.")
 
